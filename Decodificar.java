@@ -3,12 +3,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Decodificar {
+    public static String jump(String s){
+        String substring = s.substring(6);
+        String sub = "0000" + substring + "00";
+
+        String adress = "0x" + toHexa(sub.substring(0,4)) 
+                        + toHexa(sub.substring(4,8)) 
+                        + toHexa(sub.substring(8,12)) 
+                        + toHexa(sub.substring(12,16)) 
+                        + toHexa(sub.substring(16,20))
+                        + toHexa(sub.substring(20,24))
+                        + toHexa(sub.substring(24,28))
+                        + toHexa(sub.substring(28));
+
+        return ("j " + adress);
+    }
+
+    public static String jumpRegister(String s){
+        String substring = s.substring(6,11);
+
+        int register = toDecimal(substring);
+
+        String adress = "$" + register;
+
+        return ("jr " + adress);
+    }
+
+    public static String add(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11,16));  
+        int rd = toDecimal(s.substring(16,21));
+        
+        String adress = "$"+rd+",$"+rs+",$"+rt;
+
+        return ("add " + adress);
+    }
+
     public static String funct(String s){
-        switch(s){
+        String substring = s.substring(26);
+
+        switch(substring){
             case "001000":
-                return "jr ";
+                return jumpRegister(s);
             case "100000":
-                return "add ";
+                return add(s);
             case "100100":
                 return "and ";
             case "000010":
@@ -24,7 +62,7 @@ public class Decodificar {
 
         switch(substring){
             case "000010":
-                return "j ";
+                return jump(s);
             case "000100":
                 return "beq ";
             case "000101":
@@ -36,11 +74,21 @@ public class Decodificar {
             case "100011":
                 return "lw ";
             case "000000":
-                return funct(s.substring(26));
+                return funct(s);
 
         }
 
         return s;
+    }
+
+    public static int toDecimal(String s){
+        int value[] = new int[s.length()];
+        
+        for (int i = 0; i < s.length(); i++){
+            value[i] = (int)(s.charAt(i))-48;
+        }
+
+        return ((int)(Math.pow(2, 0) * value[4] + Math.pow(2, 1) * value[3] + Math.pow(2, 2) * value[2] + Math.pow(2, 3) * value[1] + Math.pow(2, 4) * value[0]));
     }
 
     public static String toBinary(char c) {
@@ -77,6 +125,44 @@ public class Decodificar {
                 return "1110";
             case 'f':
                 return "1111";
+        }
+        return null;
+    }
+
+    public static String toHexa(String s) {
+        switch(s){
+            case "0000":
+                return "0";
+            case "0001":
+                return "1";
+            case "0010":
+                return "2"; 
+            case "0011":
+                return "3";
+            case "0100":
+                return "4";
+            case "0101":
+                return "5";
+            case "0110":
+                return "6";
+            case "0111":
+                return "7";
+            case "1000":
+                return "8";
+            case "1001":
+                return "9";
+            case "1010":
+                return "a";
+            case "1011":
+                return "b";
+            case "1100":
+                return "c";
+            case "1101":
+                return "d";
+            case "1110":
+                return "e";
+            case "1111":
+                return "f";
         }
         return null;
     }
