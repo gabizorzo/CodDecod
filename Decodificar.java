@@ -39,6 +39,15 @@ public class Decodificar {
         return ("add " + adress);
     }
 
+    public static String loadWord(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11,16));
+
+        String adress = "$"+rt+",0x00000000($"+rs+")";
+
+        return ("lw " + adress);
+    }
+
     public static String funct(String s){
         String substring = s.substring(26);
 
@@ -72,7 +81,7 @@ public class Decodificar {
             case "001101":
                 return "ori ";
             case "100011":
-                return "lw ";
+                return loadWord(s);
             case "000000":
                 return funct(s);
 
