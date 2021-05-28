@@ -48,6 +48,45 @@ public class Decodificar {
         return ("lw " + adress);
     }
 
+    public static String branchEqual(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11,16));
+        String label1 = toHexa(s.substring(16, 20));
+        String label2 = toHexa(s.substring(20, 24));
+        String label3 = toHexa(s.substring(24, 28));
+        String label4 = toHexa(s.substring(28));
+
+        String adress = "$"+rs+",$"+rt+",0xffff"+label1+label2+label3+label4;
+
+        return ("beq " + adress);
+    }
+
+    public static String branchNotEqual(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11,16));
+        String label1 = toHexa(s.substring(16, 20));
+        String label2 = toHexa(s.substring(20, 24));
+        String label3 = toHexa(s.substring(24, 28));
+        String label4 = toHexa(s.substring(28));
+
+        String adress = "$"+rs+",$"+rt+",0xffff"+label1+label2+label3+label4;
+
+        return ("bne " + adress);
+    }
+
+    public static String orImmediate(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11,16));
+        String imm1 = toHexa(s.substring(16, 20));
+        String imm2 = toHexa(s.substring(20, 24));
+        String imm3 = toHexa(s.substring(24, 28));
+        String imm4 = toHexa(s.substring(28));
+
+        String adress = "$"+rt+",$"+rs+",0x0000"+imm1+imm2+imm3+imm4; 
+
+        return ("ori "+ adress);
+    }
+
     public static String funct(String s){
         String substring = s.substring(26);
 
@@ -73,13 +112,13 @@ public class Decodificar {
             case "000010":
                 return jump(s);
             case "000100":
-                return "beq ";
+                return branchEqual(s);
             case "000101":
-                return "bne ";
+                return branchNotEqual(s);
             case "001010":
                 return "slti ";
             case "001101":
-                return "ori ";
+                return orImmediate(s);
             case "100011":
                 return loadWord(s);
             case "000000":
