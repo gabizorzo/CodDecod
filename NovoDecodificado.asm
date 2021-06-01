@@ -1,5 +1,5 @@
 .text
-.globl main
+.globl l0
 l0:
 j l8
 jr $31
@@ -10,5 +10,5 @@ bne $9,$18,l0
 ori $9,$9,0x00000002
 and $8,$9,$10
 l8:
-srl $1,$9,0x000null
-slti 
+srl $9,$10,0x00000001
+slti $8,$9,0x0000000a

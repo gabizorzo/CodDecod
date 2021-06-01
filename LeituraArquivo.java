@@ -8,7 +8,7 @@ public class LeituraArquivo {
     public static List<String> scan() throws IOException{
         Scanner in = new Scanner(System.in);
 
-        System.out.print("Nome do arquivo de teste (colocar extensão no final): ");
+        System.out.print("Nome do arquivo a ser lido (colocar extensão no final): ");
         String file = in.next();
         Scanner scanner = new Scanner(new File(file));
         List<String> test = new ArrayList<String>();

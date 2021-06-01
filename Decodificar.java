@@ -127,6 +127,19 @@ public class Decodificar {
         return("srl " + adress);
     }
 
+    public static String setLessThanImmediate(String s){
+        int rd = toDecimal(s.substring(11, 16));
+        int rs = toDecimal(s.substring(6, 11)); 
+        String imm1 = toHexa(s.substring(16, 20));
+        String imm2 = toHexa(s.substring(20, 24));
+        String imm3 = toHexa(s.substring(24, 28));
+        String imm4 = toHexa(s.substring(28));
+
+        String adress = "$"+rd+",$"+rs+",0x0000"+imm1+imm2+imm3+imm4;
+
+        return("slti " + adress);
+    }
+
     public static String funct(String s){
         String substring = s.substring(26);
 
@@ -156,7 +169,7 @@ public class Decodificar {
             case "000101":
                 return branchNotEqual(s, k);
             case "001010":
-                return "slti ";
+                return setLessThanImmediate(s);
             case "001101":
                 return orImmediate(s);
             case "100011":
@@ -306,9 +319,8 @@ public class Decodificar {
     public static String breakCode() throws IOException{
         List<String> file = LeituraArquivo.scan();
 
-       // System.out.println(file.get(0));
-
-        hasLabel = new Boolean [file.size()];
+        hasLabel = new Boolean[file.size()];
+        hasLabel[0] = true;
 
         String line;
         List<String> binary = new ArrayList<String>();
@@ -329,19 +341,15 @@ public class Decodificar {
             newLine = "";
         }
 
-        //String substring = "";
-
         for(int k=0; k < binary.size(); k++){
-           // substring = aux.get(k).substring(0,6);
             code.add(opcode(binary.get(k), k));
-          //  System.out.println(aux.get(k));
         }
 
-        for(int k=0; k < code.size(); k++){
-            System.out.println(code.get(k));
-        }
+        // for(int k=0; k < code.size(); k++){
+        //     System.out.println(code.get(k));
+        // }
 
-        String teste = ".text\n.globl main\n"; 
+        String teste = ".text\n.globl l0\n"; 
 
         for(int k=0; k < code.size(); k++){
             if (hasLabel[k]){
