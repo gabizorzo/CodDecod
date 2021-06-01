@@ -14,6 +14,10 @@ public class App {
             EscreverArquivoDecodificado decodificar = new EscreverArquivoDecodificado();
 
             decodificar.execute();
+        } else if (command == 2){
+            EscreverArquivoCodificado codificar = new EscreverArquivoCodificado();
+
+            codificar.execute();
         }
 
         in.close();

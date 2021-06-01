@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Codificar {
+    private static List<String> codeResult = new ArrayList<>();
+
     public static String jump(String s){
         String adress = s.substring(2);
         String binary = "";
@@ -22,7 +24,7 @@ public class Codificar {
                           + toHexa(binary.substring(24, 28))
                           + toHexa(binary.substring(28));
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -42,7 +44,7 @@ public class Codificar {
                             + toHexa(binary.substring(24, 28))
                             + toHexa(binary.substring(28));
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -65,7 +67,7 @@ public class Codificar {
                             + toHexa(binary.substring(24, 28))
                             + toHexa(binary.substring(28));
         
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -86,7 +88,7 @@ public class Codificar {
                             + toHexa(binary.substring(24, 28))
                             + toHexa(binary.substring(28));
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -105,7 +107,7 @@ public class Codificar {
                             + toHexa(binary.substring(12))
                             + offset;
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -124,7 +126,7 @@ public class Codificar {
                             + toHexa(binary.substring(12))
                             + offset;
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -143,7 +145,7 @@ public class Codificar {
                             + toHexa(binary.substring(12))
                             + imm;
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -166,7 +168,7 @@ public class Codificar {
                             + toHexa(binary.substring(24, 28))
                             + toHexa(binary.substring(28));
         
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -189,7 +191,7 @@ public class Codificar {
                             + toHexa(binary.substring(24, 28))
                             + toHexa(binary.substring(28));
 
-        System.out.println(code);
+        codeResult.add(code);
 
         return code;
     }
@@ -207,8 +209,8 @@ public class Codificar {
                             + toHexa(binary.substring(8, 12))
                             + toHexa(binary.substring(12))
                             + imm;
-
-        System.out.println(code);
+                           
+        codeResult.add(code);
 
         return code;
     }
@@ -337,7 +339,7 @@ public class Codificar {
         return "oops";
     }
 
-    public static void buildCode() throws IOException{
+    public static String buildCode() throws IOException{
         List<String> file = LeituraArquivo.scan();
 
         String line = "";
@@ -367,15 +369,18 @@ public class Codificar {
                 }
             }
 
-           
-            
             
             
         }
 
-        // for(int k=0; k < code.size(); k++){
-        //     System.out.println(code.get(k));
-        // }
+        String write = ""; 
+
+        for(int k=0; k < codeResult.size(); k++){
+            write += codeResult.get(k) + "\n";
+        }        
+
+        return write;
+
     } 
 
     public static void main (String[] args) throws IOException{

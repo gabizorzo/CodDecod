@@ -349,17 +349,17 @@ public class Decodificar {
         //     System.out.println(code.get(k));
         // }
 
-        String teste = ".text\n.globl l0\n"; 
+        String write = ".text\n.globl l0\n"; 
 
         for(int k=0; k < code.size(); k++){
             if (hasLabel[k]){
-                teste += "l" + k + ":\n";
+                write += "l" + k + ":\n";
             }
 
-            teste += code.get(k) + "\n";
+            write += code.get(k) + "\n";
         }        
 
-        return teste;
+        return write;
     } 
 
     public static void main (String[] args) throws IOException{

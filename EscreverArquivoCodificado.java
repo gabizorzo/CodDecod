@@ -6,12 +6,12 @@ public class EscreverArquivoCodificado {
         try {
             FileWriter myWriter = new FileWriter("NovoCodificado.txt");
       
-            myWriter.write(Decodificar.breakCode());
+            myWriter.write(Codificar.buildCode());
             myWriter.close();
             System.out.println("Escrito com sucesso no arquivo!\nO seu arquivo deverá estar na mesma pasta deste programa com o nome 'NovoCodificado.txt'.");
           } catch (IOException e) {
             System.out.println("Ocorreu um erro.");
             e.printStackTrace();
-          }
+         }
     }
 }
