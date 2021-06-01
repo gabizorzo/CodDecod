@@ -110,6 +110,111 @@ public class Codificar {
         return code;
     }
 
+    public static String branchNotEqual(String s){
+        String[] vetor = s.split(",");
+        String rs = calculateToBinary(vetor[0].substring(1));
+        String rt = calculateToBinary(vetor[1].substring(1));
+        String offset = vetor[2].substring(6);
+
+        String binary = "000101" + rs + rt;
+
+        String code = "0x"  + toHexa(binary.substring(0, 4))
+                            + toHexa(binary.substring(4, 8))
+                            + toHexa(binary.substring(8, 12))
+                            + toHexa(binary.substring(12))
+                            + offset;
+
+        System.out.println(code);
+
+        return code;
+    }
+
+    public static String orImmediate(String s){
+        String[] vetor = s.split(",");
+        String rt = calculateToBinary(vetor[0].substring(1));
+        String rs = calculateToBinary(vetor[1].substring(1));
+        String imm = vetor[2].substring(6);
+
+        String binary = "001101" + rs + rt;
+
+        String code = "0x"  + toHexa(binary.substring(0, 4))
+                            + toHexa(binary.substring(4, 8))
+                            + toHexa(binary.substring(8, 12))
+                            + toHexa(binary.substring(12))
+                            + imm;
+
+        System.out.println(code);
+
+        return code;
+    }
+
+    public static String and(String s){
+        String[] vetor = s.split(",");
+        String rd = calculateToBinary(vetor[0].substring(1));
+        String rs = calculateToBinary(vetor[1].substring(1));
+        String rt = calculateToBinary(vetor[2].substring(1));
+
+        String binary = "000000" + rs + rt + rd + "00000" + "100100";
+
+
+        String code = "0x"  + toHexa(binary.substring(0, 4))
+                            + toHexa(binary.substring(4, 8))
+                            + toHexa(binary.substring(8, 12))
+                            + toHexa(binary.substring(12, 16))
+                            + toHexa(binary.substring(16, 20))
+                            + toHexa(binary.substring(20, 24))
+                            + toHexa(binary.substring(24, 28))
+                            + toHexa(binary.substring(28));
+        
+        System.out.println(code);
+
+        return code;
+    }
+
+    public static String shiftRightLogical(String s){
+        String[] vetor = s.split(",");
+        String rd = calculateToBinary(vetor[0].substring(1));
+        String rt = calculateToBinary(vetor[1].substring(1));
+        String rs = "00000";
+        String shamt = vetor[2].substring(5);
+
+        String binary = "000000" + rs + rt + rd + shamt + "000010";
+
+        String code = "0x"  + toHexa(binary.substring(0, 4))
+                            + toHexa(binary.substring(4, 8))
+                            + toHexa(binary.substring(8, 12))
+                            + toHexa(binary.substring(12, 16))
+                            + toHexa(binary.substring(16, 20))
+                            + toHexa(binary.substring(20, 24))
+                            + toHexa(binary.substring(24, 28))
+                            + toHexa(binary.substring(28));
+
+        System.out.println(code);
+
+        return code;
+    }
+
+    public static String setLessThanImmediat(String s){
+        String[] vetor = s.split(",");
+        String rd = calculateToBinary(vetor[0].substring(1));
+        String rs = calculateToBinary(vetor[1].substring(1));
+        String imm = vetor[2].substring(6);
+
+        String binary = "001010" + rs + rd;
+
+        String code = "0x"  + toHexa(binary.substring(0, 4))
+                            + toHexa(binary.substring(4, 8))
+                            + toHexa(binary.substring(8, 12))
+                            + toHexa(binary.substring(12))
+                            + imm;
+
+        System.out.println(code);
+
+        return code;
+    }
+
+    
+
     public static String calculateToBinary(String s){
 
         int number = Integer.parseInt(s);
@@ -217,15 +322,15 @@ public class Codificar {
             case "beq":
                 return branchEqual(code);
             case "bne":
-                return "0x0";
+                return branchNotEqual(code);
             case "ori":
-                return "0x0";
+                return orImmediate(code);
             case "and":
-                return "0x0";
+                return and(code);
             case "srl":
-                return "0x0";
+                return shiftRightLogical(code);
             case "slti":
-                return "0x0";
+                return setLessThanImmediat(code);
 
         }
 
