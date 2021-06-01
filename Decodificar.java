@@ -3,6 +3,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Decodificar {
+    private static Boolean[] hasLabel;
+
+    public static String convertToLabel(String s){
+        int indexLabel = (((int)(s.charAt(s.length()-1))-48) + 16*((int)(s.charAt(s.length()-2))-48))/4;
+
+        hasLabel[indexLabel] = true;
+
+        return "l"+indexLabel;
+    }
+
     public static String jump(String s){
         String substring = s.substring(6);
         String sub = "0000" + substring + "00";
@@ -16,7 +26,9 @@ public class Decodificar {
                         + toHexa(sub.substring(24,28))
                         + toHexa(sub.substring(28));
 
-        return ("j " + adress);
+        String label = convertToLabel(adress);
+
+        return ("j " + label);
     }
 
     public static String jumpRegister(String s){
@@ -48,28 +60,36 @@ public class Decodificar {
         return ("lw " + adress);
     }
 
-    public static String branchEqual(String s){
+    public static String branchEqual(String s, int k){
         int rs = toDecimal(s.substring(6,11));
         int rt = toDecimal(s.substring(11,16));
-        String label1 = toHexa(s.substring(16, 20));
-        String label2 = toHexa(s.substring(20, 24));
-        String label3 = toHexa(s.substring(24, 28));
-        String label4 = toHexa(s.substring(28));
+        // String label1 = toHexa(s.substring(16, 20));
+        // String label2 = toHexa(s.substring(20, 24));
+        // String label3 = toHexa(s.substring(24, 28));
+        // String label4 = toHexa(s.substring(28));
 
-        String adress = "$"+rs+",$"+rt+",0xffff"+label1+label2+label3+label4;
+        int indexLabel = toDecimal2s(s.substring(16))+k+1;
+
+        hasLabel[indexLabel] = true;
+
+        String adress = "$"+rs+",$"+rt+",l"+indexLabel;
 
         return ("beq " + adress);
     }
 
-    public static String branchNotEqual(String s){
+    public static String branchNotEqual(String s, int k){
         int rs = toDecimal(s.substring(6,11));
         int rt = toDecimal(s.substring(11,16));
-        String label1 = toHexa(s.substring(16, 20));
-        String label2 = toHexa(s.substring(20, 24));
-        String label3 = toHexa(s.substring(24, 28));
-        String label4 = toHexa(s.substring(28));
+        // String label1 = toHexa(s.substring(16, 20));
+        // String label2 = toHexa(s.substring(20, 24));
+        // String label3 = toHexa(s.substring(24, 28));
+        // String label4 = toHexa(s.substring(28));
 
-        String adress = "$"+rs+",$"+rt+",0xffff"+label1+label2+label3+label4;
+        int indexLabel = toDecimal2s(s.substring(16))+k+1;
+
+        hasLabel[indexLabel] = true;
+
+        String adress = "$"+rs+",$"+rt+",l"+indexLabel;
 
         return ("bne " + adress);
     }
@@ -87,6 +107,26 @@ public class Decodificar {
         return ("ori "+ adress);
     }
 
+    public static String and(String s){
+        int rs = toDecimal(s.substring(6,11));
+        int rt = toDecimal(s.substring(11, 16));
+        int rd = toDecimal(s.substring(16, 21));
+
+        String adress = "$"+rd+",$"+rs+",$"+rt;
+
+        return("and " + adress);
+    }
+
+    public static String shiftRightLogical(String s){
+        int rt = toDecimal(s.substring(11,16));
+        int rd = toDecimal(s.substring(16, 21));
+        String shamt = toHexa(s.substring(22, 26)); 
+        
+        String adress = "$"+rd+",$"+rt+",0x0000000"+shamt;
+
+        return("srl " + adress);
+    }
+
     public static String funct(String s){
         String substring = s.substring(26);
 
@@ -96,15 +136,15 @@ public class Decodificar {
             case "100000":
                 return add(s);
             case "100100":
-                return "and ";
+                return and(s);
             case "000010":
-                return "srl ";
+                return shiftRightLogical(s);
             
         }
         return s;
     }
 
-    public static String opcode(String s){
+    public static String opcode(String s, int k){
 
         String substring = s.substring(0,6);
 
@@ -112,9 +152,9 @@ public class Decodificar {
             case "000010":
                 return jump(s);
             case "000100":
-                return branchEqual(s);
+                return branchEqual(s, k);
             case "000101":
-                return branchNotEqual(s);
+                return branchNotEqual(s, k);
             case "001010":
                 return "slti ";
             case "001101":
@@ -137,6 +177,54 @@ public class Decodificar {
         }
 
         return ((int)(Math.pow(2, 0) * value[4] + Math.pow(2, 1) * value[3] + Math.pow(2, 2) * value[2] + Math.pow(2, 3) * value[1] + Math.pow(2, 4) * value[0]));
+    }
+
+    public static int toDecimal2s(String s){
+        int value = 0;
+        String sAux = "";
+        String sAux2 = "";
+        Boolean negative = false;
+
+
+        if (s.charAt(0) == '1'){
+            negative = true;
+
+            for (int i = 0; i < s.length(); i++){
+                if (s.charAt(i) == '1'){
+                    sAux += "0";
+                } else {
+                    sAux += "1";
+                }
+            }
+
+            for (int i = s.length()-1; i >= 0; i--){
+                if (sAux.charAt(i) == '1'){
+                    sAux2 += "0";
+                } else {
+                    sAux2 += "1";
+                    for (int j = i-1; j >=0; j--){
+                        sAux2 += sAux.charAt(j);
+                    }
+
+                    StringBuilder sb = new StringBuilder(sAux2);
+                    sb.reverse();
+                    s = sb.toString();
+
+                    break;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < s.length(); i++){
+            value += ((int)(s.charAt(i))-48) * (int)(Math.pow(2, s.length()-1-i));
+        }
+
+        if (negative) {
+            value = -value;
+        }
+
+        return value;
     }
 
     public static String toBinary(char c) {
@@ -215,10 +303,12 @@ public class Decodificar {
         return null;
     }
 
-    public static void breakCode() throws IOException{
+    public static String breakCode() throws IOException{
         List<String> file = LeituraArquivo.scan();
 
        // System.out.println(file.get(0));
+
+        hasLabel = new Boolean [file.size()];
 
         String line;
         List<String> binary = new ArrayList<String>();
@@ -226,6 +316,8 @@ public class Decodificar {
         String newLine = "";
 
         for (int i = 0; i < file.size(); i++){
+            hasLabel[i] = false;
+
             line = file.get(i);
             
             for(int j = 2; j < line.length(); j++){
@@ -241,7 +333,7 @@ public class Decodificar {
 
         for(int k=0; k < binary.size(); k++){
            // substring = aux.get(k).substring(0,6);
-            code.add(opcode(binary.get(k)));
+            code.add(opcode(binary.get(k), k));
           //  System.out.println(aux.get(k));
         }
 
@@ -249,10 +341,18 @@ public class Decodificar {
             System.out.println(code.get(k));
         }
 
-        
-        
-    } 
+        String teste = ".text\n.globl main\n"; 
 
+        for(int k=0; k < code.size(); k++){
+            if (hasLabel[k]){
+                teste += "l" + k + ":\n";
+            }
+
+            teste += code.get(k) + "\n";
+        }        
+
+        return teste;
+    } 
 
     public static void main (String[] args) throws IOException{
         breakCode();
