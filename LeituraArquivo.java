@@ -1,4 +1,4 @@
-import java.io.IOException;
+
 /*  ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES I
     Prof. Fabiano Passuelo Hessel
     Turma 128
@@ -6,6 +6,7 @@ import java.io.IOException;
     Trabalho Prático 2
 */
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
 import java.util.ArrayList;

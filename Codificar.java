@@ -71,9 +71,13 @@ public class Codificar {
 
     // Método para codificar o add
     public static String add(String s){
+        // Quebra o código lido onde tem vírgula
         String[] vetor = s.split(",");
+        // Converte a parte referente ao rd para binário
         String rd = calculateToBinary(vetor[0].substring(1));
+        // Converte a parte referente ao rs para binário
         String rs = calculateToBinary(vetor[1].substring(1));
+        // Converte a parte referente ao rt para binário
         String rt = calculateToBinary(vetor[2].substring(1));
 
         // Escreve o comando todo em binário

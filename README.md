@@ -38,7 +38,9 @@ O seu arquivo deverá estar na mesma pasta deste programa com o nome 'NomeDoArqu
 ```
 O novo arquivo gerado deverá estar na mesma pasta deste programa com o nome informado no terminal.
 
-## Arquivos de entrada
+Caso queira executar o programa novamente, basta reiniciar com a linha de comando.
+
+## Arquivos
 
 ### Código .asm
 
